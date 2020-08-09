@@ -1,6 +1,19 @@
 # CAPI
 The web API for http://yggpi.co.za/ written in C, using https://kore.io/
 
+## Compiling & Running
+
+To build the project, simply run,
+
+````
+$ kodev buld
+````
+
+To run the project, simply run,
+````
+$ kodev run
+````
+
 ## Current API calls
 
 ### Login
