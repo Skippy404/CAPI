@@ -1,0 +1,10 @@
+### kore.io ###
+*.o
+.flavor
+.objs
+CAPI.so
+assets.h
+cert
+
+### vim ###
+*.swp
