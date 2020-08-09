@@ -1,6 +1,7 @@
 #include <kore/kore.h>
 #include <kore/http.h>
 #include <stdio.h>
+#include <string.h>
 
 int	login(struct http_request *);
 int	pass(struct http_request *);
@@ -8,24 +9,31 @@ int	pass(struct http_request *);
 int
 login(struct http_request *req)
 {
-	char *user, *id;
+	char *user, *pass;
+	char cbuff[256];
 	struct kore_buf *buff;
 
 	http_populate_get(req);
 	buff = kore_buf_alloc(128);
 
-	if (http_argument_get_string(req, "id", &id) && 
-		http_argument_get_string(req, "name", &user)) {
-		kore_buf_appendf(buff, "{\"name\":\"%s\",\"id\":%s}" , user, id);
+	if (http_argument_get_string(req, "pass", &pass) && 
+		http_argument_get_string(req, "user", &user)) {
+		// Just a temp return to test that the get works, temp token
+		// TODO check against DB if valid login
+		kore_buf_appendf(buff, "{\"code\":0,\"token\":\"%s%s\"}" , user, pass);
 	} else {
-		http_response(req, 500, NULL, 0);
+		http_response_header(req, "Content-Type", "application/json");
+		sprintf(cbuff, "{\"code\":1,\"token\":null}");
+		kore_buf_append(buff, cbuff, strlen(cbuff));
+		http_response(req, 401, buff->data, buff->offset);
 		return (KORE_RESULT_OK);
 	}
 	
-	// Set the response header
+	// Set the response header to json format
 	http_response_header(req, "Content-Type", "application/json");
 	http_response(req, 200, buff->data, buff->offset);
-	kore_buf_free(buff);
+
+	kore_buf_free(buff); // good bois dont create mem leaks
 	return (KORE_RESULT_OK);
 }
 
