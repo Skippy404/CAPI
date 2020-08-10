@@ -6,6 +6,18 @@
 int	login(struct http_request *);
 int	pass(struct http_request *);
 
+char buffer[256];
+
+int
+start(int state)
+{
+	// Gets loaded at the start, all workers will have "Hello, World!" -> buffer
+	printf("LOADING...\n");
+	sprintf(buffer, "Hello, World!");
+	printf("LOADED!\n%s\n", buffer);
+	return KORE_RESULT_OK;
+}
+
 int
 login(struct http_request *req)
 {
